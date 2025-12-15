@@ -7,7 +7,7 @@ import threading
 # --- Configuration ---
 DATA_SIZE = 50
 MIN_VAL = 0
-MAX_VAL = 100
+MAX_VAL = 100  
 NUM_BUCKETS = 5
 
 class ParallelBucketSort:
@@ -37,7 +37,10 @@ class ParallelBucketSort:
         for i, bucket in enumerate(buckets):
             # สร้างกราฟแท่งง่ายๆ จากจำนวนข้อมูล
             bar = "█" * len(bucket)
-            range_str = f"{i*self.range_per_bucket:.0f}-{(i+1)*self.range_per_bucket:.0f}"
+            # คำนวณช่วง: start ถึง end-1 (เช่น 0-19, 20-39)
+            start_val = int(MIN_VAL + (i * self.range_per_bucket))
+            end_val = int(MIN_VAL + ((i + 1) * self.range_per_bucket)) - 1
+            range_str = f"{start_val}-{end_val}"
             print(f"Bucket {i} [{range_str:<7}]: {bar} ({len(bucket)} items) -> {bucket}")
         print("-" * 40)
 
@@ -45,7 +48,7 @@ class ParallelBucketSort:
         print(f"=== เริ่มต้น Parallel Bucket Sort (PID: {os.getpid()}) ===")
         
         # 1. Generate Data
-        raw_data = [random.randint(MIN_VAL, MAX_VAL) for _ in range(DATA_SIZE)]
+        raw_data = [random.randint(MIN_VAL, MAX_VAL - 1) for _ in range(DATA_SIZE)]
         print(f"ข้อมูลดิบ ({DATA_SIZE} ตัว): {raw_data}")
 
         # 2. Scatter (กระจายข้อมูลลงถัง)
